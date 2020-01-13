@@ -50,7 +50,7 @@ public class MarsRover {
 
         operations.put(R, p -> {
             int index = p.getOrientation().ordinal();
-            int newIndex = index == Orientation.values().length -1  ? 0 : index + 1;
+            int newIndex = index == Orientation.values().length - 1 ? 0 : index + 1;
             p.setOrientation(Orientation.values()[newIndex]);
         });
     }
