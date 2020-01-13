@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static zxh.demo.tw.marsrover.OperationCmd.M;
+import static zxh.demo.tw.marsrover.OperationCmd.*;
 
 /**
  * MarsRover:
@@ -40,6 +40,18 @@ public class MarsRover {
                     break;
                 }
             }
+        });
+
+        operations.put(L, p -> {
+            int index = p.getOrientation().ordinal();
+            int newIndex = (index == 0 ? Orientation.values().length : index) - 1;
+            p.setOrientation(Orientation.values()[newIndex]);
+        });
+
+        operations.put(R, p -> {
+            int index = p.getOrientation().ordinal();
+            int newIndex = index == Orientation.values().length -1  ? 0 : index + 1;
+            p.setOrientation(Orientation.values()[newIndex]);
         });
     }
 

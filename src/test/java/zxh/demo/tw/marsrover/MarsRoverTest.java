@@ -89,4 +89,37 @@ public class MarsRoverTest {
         assertThrows(MovementOutOfBoundaryException.class,
                 () -> marsRover.executeCmds(new OperationCmd[]{OperationCmd.M}));
     }
+
+    @Test
+    public void should_return_north_when_turn_left_at_south() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(), new Posture(1, 1, SOUTH));
+        marsRover.executeCmds(new OperationCmd[]{OperationCmd.L});
+        assertEquals(NORTH, marsRover.getPosture().getOrientation());
+    }
+
+    @Test
+    public void should_return_west_when_turn_left_at_north() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(), new Posture(1, 1, NORTH));
+        marsRover.executeCmds(new OperationCmd[]{OperationCmd.L});
+        assertEquals(WEST, marsRover.getPosture().getOrientation());
+    }
+
+    @Test
+    public void should_return_west_when_turn_right_at_east() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(), new Posture(1, 1, EAST));
+        marsRover.executeCmds(new OperationCmd[]{OperationCmd.R});
+        assertEquals(WEST, marsRover.getPosture().getOrientation());
+    }
+
+    @Test
+    public void should_return_north_when_turn_left_at_west() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(), new Posture(1, 1, WEST));
+        marsRover.executeCmds(new OperationCmd[]{OperationCmd.R});
+        assertEquals(NORTH, marsRover.getPosture().getOrientation());
+    }
+
 }
