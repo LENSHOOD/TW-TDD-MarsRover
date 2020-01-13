@@ -1,17 +1,47 @@
 package zxh.demo.tw.marsrover;
 
+import com.google.common.collect.Maps;
+
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static zxh.demo.tw.marsrover.OperationCmd.M;
 
 /**
  * MarsRover:
+ *
  * @author zhangxuhai
  * @date 2020/1/13
-*/
+ */
 public class MarsRover {
     private Mars mars;
     private Posture posture;
+    private EnumMap<OperationCmd, Consumer<Posture>> operations = Maps.newEnumMap(OperationCmd.class);
+    {
+        operations.put(M, p -> {
+            switch (p.getOrientation()) {
+                case EAST: {
+                    p.setX(checkPosition(p.getX() + 1));
+                    break;
+                }
+                case WEST: {
+                    p.setX(checkPosition(p.getX() - 1));
+                    break;
+                }
+                case NORTH: {
+                    p.setY(checkPosition(p.getY() + 1));
+                    break;
+                }
+                case SOUTH: {
+                    p.setY(checkPosition(p.getY() - 1));
+                    break;
+                }
+            }
+        });
+    }
 
     public void landing(Mars mars, Posture posture) {
         this.mars = Objects.requireNonNull(mars);
@@ -23,5 +53,17 @@ public class MarsRover {
 
     public Posture getPosture() {
         return posture;
+    }
+
+    public void executeCmds(OperationCmd[] operationCmds) {
+        Arrays.stream(operationCmds).forEach(cmd -> operations.get(cmd).accept(posture));
+    }
+
+    private int checkPosition(int position) {
+        if (position > mars.getSize()) {
+            throw new MovementOutOfBoundaryException();
+        }
+
+        return position;
     }
 }

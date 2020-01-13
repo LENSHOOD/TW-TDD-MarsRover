@@ -45,4 +45,48 @@ public class MarsRoverTest {
         assertThrows(NullPointerException.class, () -> marsRover.landing(null, new Posture(0, 0, NORTH)));
         assertThrows(NullPointerException.class, () -> marsRover.landing(new Mars(), null));
     }
+
+    @Test
+    public void should_return_position_1_2_when_move_to_north() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(), new Posture(1, 1, NORTH));
+        marsRover.executeCmds(new OperationCmd[]{OperationCmd.M});
+        assertEquals(1, marsRover.getPosture().getX());
+        assertEquals(2, marsRover.getPosture().getY());
+    }
+
+    @Test
+    public void should_return_position_1_0_when_move_to_south() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(), new Posture(1, 1, SOUTH));
+        marsRover.executeCmds(new OperationCmd[]{OperationCmd.M});
+        assertEquals(1, marsRover.getPosture().getX());
+        assertEquals(0, marsRover.getPosture().getY());
+    }
+
+    @Test
+    public void should_return_position_0_1_when_move_to_west() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(), new Posture(1, 1, WEST));
+        marsRover.executeCmds(new OperationCmd[]{OperationCmd.M});
+        assertEquals(0, marsRover.getPosture().getX());
+        assertEquals(1, marsRover.getPosture().getY());
+    }
+
+    @Test
+    public void should_return_position_2_1_when_move_to_east() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(), new Posture(1, 1, EAST));
+        marsRover.executeCmds(new OperationCmd[]{OperationCmd.M});
+        assertEquals(2, marsRover.getPosture().getX());
+        assertEquals(1, marsRover.getPosture().getY());
+    }
+
+    @Test
+    public void should_throw_movement_out_of_boundary_exception_when_move_to_out_of_boundary() {
+        MarsRover marsRover = new MarsRover();
+        marsRover.landing(new Mars(100), new Posture(1, 100, NORTH));
+        assertThrows(MovementOutOfBoundaryException.class,
+                () -> marsRover.executeCmds(new OperationCmd[]{OperationCmd.M}));
+    }
 }
