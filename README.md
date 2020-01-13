@@ -4,7 +4,7 @@ TW TDD Training Lesson 2 - MarsRover
 ### Tasking
 1. Initialize mars rover, report latest status
     - init mars rover with position x, y, orientation N, S, E, W
-        - given size to init map, default map size is max_integer * max_integer, throw exception if size exceed max_integer
+        - given size to init map, default map size is max_integer * max_integer
         - given posture contains of integer x, y as position, any of enum N,S,E,W as orientation, throw exception if exceed map boundary or null orientation
     - report self location and orientation
         - return current posture
