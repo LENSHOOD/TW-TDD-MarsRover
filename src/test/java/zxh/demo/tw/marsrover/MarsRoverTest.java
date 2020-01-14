@@ -109,4 +109,15 @@ public class MarsRoverTest {
 
         assertEquals(EAST, marsRover.getPosition().getOrientation());
     }
+
+    @Test
+    public void should_at_last_0_1_south__when_take_m_r_m_m_l_m_l_m_l_m_r_m_at_0_0north() {
+        MarsRover marsRover = new MarsRover(new MarsRover.Position(0, 0, NORTH));
+        marsRover.execute(new MovementCommand[]{M, R, M, M, L, M, L, M, L, M, R, M});
+
+        assertEquals(0, marsRover.getPosition().getX());
+        assertEquals(1, marsRover.getPosition().getY());
+        assertEquals(WEST, marsRover.getPosition().getOrientation());
+    }
+
 }
