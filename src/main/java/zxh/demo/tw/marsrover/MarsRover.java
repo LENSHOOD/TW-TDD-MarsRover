@@ -2,6 +2,7 @@ package zxh.demo.tw.marsrover;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -17,6 +18,7 @@ import static zxh.demo.tw.marsrover.Orientation.*;
  * @date 2020/1/14
  */
 public class MarsRover {
+    @Getter
     public static class Position {
         private int x;
         private int y;
@@ -27,23 +29,11 @@ public class MarsRover {
             this.y = y;
             this.orientation = Objects.requireNonNull(orientation, "Orientation cannot be null.");
         }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public Orientation getOrientation() {
-            return orientation;
-        }
     }
 
     private Position position;
-    private Table<MovementCommand, Orientation, Consumer<Position>> operations = HashBasedTable.create();
-    {
+    private static Table<MovementCommand, Orientation, Consumer<Position>> operations = HashBasedTable.create();
+    static {
         operations.put(M, NORTH, p -> p.y = move(p.y, 1));
         operations.put(M, SOUTH, p -> p.y = move(p.y, -1));
         operations.put(M, EAST, p -> p.x = move(p.x, 1));
@@ -68,7 +58,7 @@ public class MarsRover {
         Arrays.stream(movementCommands).forEach(cmd -> operations.get(cmd, position.orientation).accept(position));
     }
 
-    private int move(int initial, int step) {
+    private static int move(int initial, int step) {
         boolean isOutOfUpBound = initial == Integer.MAX_VALUE && step > 0;
         boolean isOutOfDownBound = initial == -Integer.MAX_VALUE && step < 0;
         if (isOutOfUpBound || isOutOfDownBound) {
