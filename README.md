@@ -4,7 +4,7 @@ TW TDD Training Lesson 2 - MarsRover
 ### Tasking
 1. Initialize mars rover, report latest status
     - init mars rover with position x, y, orientation N, S, E, W
-        - given posture contains of integer x, y as position, any of enum N,S,E,W as orientation, throw exception if exceed max integer or null orientation
+        - given posture contains of integer x, y as position, any of enum N,S,E,W as orientation, throw exception if null orientation
     - report self location and orientation
         - return current posture
 2. Execute command sequence
