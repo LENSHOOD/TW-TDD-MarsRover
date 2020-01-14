@@ -47,7 +47,7 @@ public class MarsRover {
     }
 
     public MarsRover(Position position) {
-        this.position = position;
+        this.position = Objects.requireNonNull(position);
     }
 
     public Position getPosition() {

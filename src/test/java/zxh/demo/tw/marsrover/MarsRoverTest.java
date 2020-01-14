@@ -37,6 +37,11 @@ public class MarsRoverTest {
     }
 
     @Test
+    public void should_npe_when_init_mars_rover_when_position_is_null() {
+        assertThrows(NullPointerException.class, () -> new MarsRover(null));
+    }
+
+    @Test
     public void should_move_to_1_2_when_mars_rover_take_m_at_1_1_north() {
         MarsRover marsRover = new MarsRover(new MarsRover.Position(1, 1, NORTH));
         marsRover.execute(new MovementCommand[]{M});
