@@ -79,6 +79,13 @@ public class MarsRoverTest {
     }
 
     @Test
+    public void should_throw_mars_rover_out_of_boundary_exception_when_move_to_out_of_min_integer() {
+        MarsRover marsRover = new MarsRover(new MarsRover.Position(-Integer.MAX_VALUE, -Integer.MAX_VALUE, SOUTH));
+        assertThrows(MarsRoverOutOfBoundaryException.class, () -> marsRover.execute(new MovementCommand[]{M}));
+    }
+
+
+    @Test
     public void should_turn_to_east_when_take_r_at_north() {
         MarsRover marsRover = new MarsRover(new MarsRover.Position(0, 0, NORTH));
         marsRover.execute(new MovementCommand[]{R});
