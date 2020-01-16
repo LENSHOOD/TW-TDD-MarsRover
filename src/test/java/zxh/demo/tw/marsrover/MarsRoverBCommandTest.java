@@ -53,7 +53,7 @@ public class MarsRoverBCommandTest {
     @Test
     public void should_turn_to_west_when_take_b_r_at_north() {
         MarsRover marsRover = new MarsRover(new MarsRover.Position(0, 0, NORTH));
-        marsRover.execute(new MovementCommand[]{R});
+        marsRover.execute(new MovementCommand[]{B, R});
 
         assertEquals(WEST, marsRover.getPosition().getOrientation());
     }
@@ -61,7 +61,7 @@ public class MarsRoverBCommandTest {
     @Test
     public void should_turn_to_east_when_take_b_r_at_south() {
         MarsRover marsRover = new MarsRover(new MarsRover.Position(0, 0, SOUTH));
-        marsRover.execute(new MovementCommand[]{R});
+        marsRover.execute(new MovementCommand[]{B, R});
 
         assertEquals(EAST, marsRover.getPosition().getOrientation());
     }
@@ -69,7 +69,7 @@ public class MarsRoverBCommandTest {
     @Test
     public void should_turn_to_east_when_take_b_l_at_north() {
         MarsRover marsRover = new MarsRover(new MarsRover.Position(0, 0, NORTH));
-        marsRover.execute(new MovementCommand[]{L});
+        marsRover.execute(new MovementCommand[]{B, L});
 
         assertEquals(EAST, marsRover.getPosition().getOrientation());
     }
@@ -77,7 +77,7 @@ public class MarsRoverBCommandTest {
     @Test
     public void should_turn_to_west_when_take_b_l_at_south() {
         MarsRover marsRover = new MarsRover(new MarsRover.Position(0, 0, SOUTH));
-        marsRover.execute(new MovementCommand[]{L});
+        marsRover.execute(new MovementCommand[]{B, L});
 
         assertEquals(WEST, marsRover.getPosition().getOrientation());
     }

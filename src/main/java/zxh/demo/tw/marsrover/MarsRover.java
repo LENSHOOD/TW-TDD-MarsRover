@@ -32,6 +32,7 @@ public class MarsRover {
     }
 
     private Position position;
+    private static boolean isBackCommand = false;
     private static Table<MovementCommand, Orientation, Consumer<Position>> operations = HashBasedTable.create();
     static {
         operations.put(M, NORTH, p -> p.y = move(p.y, 1));
@@ -40,11 +41,28 @@ public class MarsRover {
         operations.put(M, WEST, p -> p.x = move(p.x, -1));
 
         Arrays.stream(Orientation.values()).forEach(o ->
-                operations.put(R, o, p -> p.orientation = Orientation.values()[(o.ordinal() + 1) % 4]));
+                operations.put(R, o, p -> p.orientation = getOrientation(o, true)));
 
         Arrays.stream(Orientation.values()).forEach(o ->
-                operations.put(L, o, p -> p.orientation = Orientation.values()[(o.ordinal() + 3) % 4]));
+                operations.put(L, o, p -> p.orientation = getOrientation(o, false)));
 
+        Arrays.stream(Orientation.values()).forEach(o -> operations.put(B, o, p -> isBackCommand = true));
+    }
+
+    private static Orientation getOrientation(Orientation o, boolean isForward) {
+        return !isBackCommand == isForward
+                ? Orientation.values()[(o.ordinal() + 1) % Orientation.values().length]
+                : Orientation.values()[(o.ordinal() + Orientation.values().length - 1) % (Orientation.values().length)];
+    }
+
+    private static int move(int initial, int step) {
+        boolean isOutOfUpBound = initial == Integer.MAX_VALUE && step > 0;
+        boolean isOutOfDownBound = initial == -Integer.MAX_VALUE && step < 0;
+        if (isOutOfUpBound || isOutOfDownBound) {
+            throw new MarsRoverOutOfBoundaryException();
+        }
+
+        return initial + (isBackCommand ? -step : step);
     }
 
     public MarsRover(Position position) {
@@ -57,15 +75,5 @@ public class MarsRover {
 
     public void execute(MovementCommand[] movementCommands) {
         Arrays.stream(movementCommands).forEach(cmd -> operations.get(cmd, position.orientation).accept(position));
-    }
-
-    private static int move(int initial, int step) {
-        boolean isOutOfUpBound = initial == Integer.MAX_VALUE && step > 0;
-        boolean isOutOfDownBound = initial == -Integer.MAX_VALUE && step < 0;
-        if (isOutOfUpBound || isOutOfDownBound) {
-            throw new MarsRoverOutOfBoundaryException();
-        }
-
-        return initial + step;
     }
 }
