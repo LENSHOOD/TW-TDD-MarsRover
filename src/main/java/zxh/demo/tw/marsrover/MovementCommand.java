@@ -6,5 +6,5 @@ package zxh.demo.tw.marsrover;
  * @date 2020/1/14
 */
 public enum MovementCommand {
-    M, L, R,
+    M, L, R, B
 }

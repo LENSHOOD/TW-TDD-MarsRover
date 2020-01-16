@@ -44,6 +44,7 @@ public class MarsRover {
 
         Arrays.stream(Orientation.values()).forEach(o ->
                 operations.put(L, o, p -> p.orientation = Orientation.values()[(o.ordinal() + 3) % 4]));
+
     }
 
     public MarsRover(Position position) {
