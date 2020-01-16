@@ -123,7 +123,7 @@ public class MarsRoverTest {
     }
 
     @Test
-    public void should_at_last_0_1_south__when_take_m_r_m_m_l_m_l_m_l_m_r_m_at_0_0north() {
+    public void should_at_last_0_1_south__when_take_m_r_m_m_l_m_l_m_l_m_r_m_at_0_0_north() {
         MarsRover marsRover = new MarsRover(new MarsRover.Position(0, 0, NORTH));
         marsRover.execute(new MovementCommand[]{M, R, M, M, L, M, L, M, L, M, R, M});
 

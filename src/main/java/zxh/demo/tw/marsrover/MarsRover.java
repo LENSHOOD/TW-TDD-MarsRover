@@ -32,9 +32,9 @@ public class MarsRover {
     }
 
     private Position position;
-    private static boolean isBackCommand = false;
-    private static Table<MovementCommand, Orientation, Consumer<Position>> operations = HashBasedTable.create();
-    static {
+    private boolean isBackCommand = false;
+    private Table<MovementCommand, Orientation, Consumer<Position>> operations = HashBasedTable.create();
+    {
         operations.put(M, NORTH, p -> p.y = move(p.y, 1));
         operations.put(M, SOUTH, p -> p.y = move(p.y, -1));
         operations.put(M, EAST, p -> p.x = move(p.x, 1));
@@ -46,16 +46,16 @@ public class MarsRover {
         Arrays.stream(Orientation.values()).forEach(o ->
                 operations.put(L, o, p -> p.orientation = getOrientation(o, false)));
 
-        Arrays.stream(Orientation.values()).forEach(o -> operations.put(B, o, p -> isBackCommand = true));
+        Arrays.stream(Orientation.values()).forEach(o -> operations.put(B, o, p -> isBackCommand = !isBackCommand));
     }
 
-    private static Orientation getOrientation(Orientation o, boolean isForward) {
+    private Orientation getOrientation(Orientation o, boolean isForward) {
         return !isBackCommand == isForward
                 ? Orientation.values()[(o.ordinal() + 1) % Orientation.values().length]
                 : Orientation.values()[(o.ordinal() + Orientation.values().length - 1) % (Orientation.values().length)];
     }
 
-    private static int move(int initial, int step) {
+    private int move(int initial, int step) {
         boolean isOutOfUpBound = initial == Integer.MAX_VALUE && step > 0;
         boolean isOutOfDownBound = initial == -Integer.MAX_VALUE && step < 0;
         if (isOutOfUpBound || isOutOfDownBound) {
