@@ -1,15 +1,12 @@
 package zxh.demo.tw.marsrover;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-import lombok.Getter;
+import zxh.demo.tw.marsrover.cmd.*;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import static zxh.demo.tw.marsrover.MovementCommand.*;
-import static zxh.demo.tw.marsrover.Orientation.*;
 
 /**
  * MarsRover:
@@ -18,62 +15,24 @@ import static zxh.demo.tw.marsrover.Orientation.*;
  * @date 2020/1/14
  */
 public class MarsRover {
-    @Getter
-    public static class Position {
-        private int x;
-        private int y;
-        private Orientation orientation;
+    private PostureStatus postureStatus;
 
-        public Position(int x, int y, Orientation orientation) {
-            this.x = x;
-            this.y = y;
-            this.orientation = Objects.requireNonNull(orientation, "Orientation cannot be null.");
-        }
+    private static Map<MovementCommand, Command> cmdMap = Map.of(
+            M, new Move(),
+            L, new TurnLeft(),
+            R, new TurnRight(),
+            B, new Back()
+    );
+
+    public MarsRover(PostureStatus postureStatus) {
+        this.postureStatus = Objects.requireNonNull(postureStatus);
     }
 
-    private Position position;
-    private boolean isBackCommand = false;
-    private Table<MovementCommand, Orientation, Consumer<Position>> operations = HashBasedTable.create();
-    {
-        operations.put(M, NORTH, p -> p.y = move(p.y, 1));
-        operations.put(M, SOUTH, p -> p.y = move(p.y, -1));
-        operations.put(M, EAST, p -> p.x = move(p.x, 1));
-        operations.put(M, WEST, p -> p.x = move(p.x, -1));
-
-        Arrays.stream(Orientation.values()).forEach(o ->
-                operations.put(R, o, p -> p.orientation = getOrientation(o, true)));
-
-        Arrays.stream(Orientation.values()).forEach(o ->
-                operations.put(L, o, p -> p.orientation = getOrientation(o, false)));
-
-        Arrays.stream(Orientation.values()).forEach(o -> operations.put(B, o, p -> isBackCommand = !isBackCommand));
-    }
-
-    private Orientation getOrientation(Orientation o, boolean isForward) {
-        return !isBackCommand == isForward
-                ? Orientation.values()[(o.ordinal() + 1) % Orientation.values().length]
-                : Orientation.values()[(o.ordinal() + Orientation.values().length - 1) % (Orientation.values().length)];
-    }
-
-    private int move(int initial, int step) {
-        boolean isOutOfUpBound = initial == Integer.MAX_VALUE && step > 0;
-        boolean isOutOfDownBound = initial == -Integer.MAX_VALUE && step < 0;
-        if (isOutOfUpBound || isOutOfDownBound) {
-            throw new MarsRoverOutOfBoundaryException();
-        }
-
-        return initial + (isBackCommand ? -step : step);
-    }
-
-    public MarsRover(Position position) {
-        this.position = Objects.requireNonNull(position);
-    }
-
-    public Position getPosition() {
-        return position;
+    public PostureStatus getPostureStatus() {
+        return postureStatus;
     }
 
     public void execute(MovementCommand[] movementCommands) {
-        Arrays.stream(movementCommands).forEach(cmd -> operations.get(cmd, position.orientation).accept(position));
+        Arrays.stream(movementCommands).forEach(cmd -> postureStatus = cmdMap.get(cmd).doCommand(postureStatus));
     }
 }
