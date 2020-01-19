@@ -2,10 +2,12 @@ package zxh.demo.tw.marsrover;
 
 import zxh.demo.tw.marsrover.cmd.*;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 import static zxh.demo.tw.marsrover.MovementCommand.*;
 
 /**
@@ -16,6 +18,7 @@ import static zxh.demo.tw.marsrover.MovementCommand.*;
  */
 public class MarsRover {
     private PostureStatus postureStatus;
+    private MarsMap marsMap;
 
     private static Map<MovementCommand, Command> cmdMap = Map.of(
             M, new Move(),
@@ -25,14 +28,40 @@ public class MarsRover {
     );
 
     public MarsRover(PostureStatus postureStatus) {
-        this.postureStatus = Objects.requireNonNull(postureStatus);
+        this.postureStatus = requireNonNull(postureStatus);
     }
 
     public PostureStatus getPostureStatus() {
         return postureStatus;
     }
 
-    public void execute(MovementCommand[] movementCommands) {
-        Arrays.stream(movementCommands).forEach(cmd -> postureStatus = cmdMap.get(cmd).doCommand(postureStatus));
+    public Optional<MarsRover> execute(MovementCommand[] movementCommands) {
+        for (MovementCommand cmd : movementCommands) {
+            PostureStatus backUpPostureStatus = postureStatus;
+            postureStatus = cmdMap.get(cmd).doCommand(postureStatus);
+
+            if (nonNull(marsMap) && nonNull(marsMap.get(postureStatus.getX(), postureStatus.getY()))) {
+                postureStatus = backUpPostureStatus;
+                continue;
+            }
+
+            if (isDropIntoDitch()) {
+                requireNonNull(marsMap).set(postureStatus.getX(), postureStatus.getY(), this);
+                MarsRover newMarsRover = new MarsRover(new PostureStatus(0, 0, Orientation.NORTH, false));
+                newMarsRover.setMarsMap(marsMap);
+                return Optional.of(newMarsRover);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public void setMarsMap(MarsMap marsMap) {
+        this.marsMap = marsMap;
+    }
+
+    private Random random = new Random();
+    boolean isDropIntoDitch() {
+        return random.nextInt(1) > 0.5;
     }
 }
